@@ -30,21 +30,22 @@ const memoryGame = new MemoryGame(cards);
 window.addEventListener('load', (event) => {
   let html = '';
   memoryGame.cards.forEach((pic) => {
-    html += `
-      <div class="card" data-card-name="${pic.name}">
-        <div class="back" name="${pic.img}"></div>
-        <div class="front" style="background: url(img/${pic.img}) no-repeat"></div>
-      </div>
-    `;
+    html += `<div class="card" data-card-name="${pic.name}">`;
+    html += `<div class="back" name="${pic.img}"></div>`;
+    html += `<div class="front" style="background: url(img/${pic.img}) no-repeat"></div>`;
+    html += `</div>`;
   });
 
   // Add all the divs to the HTML
-  document.querySelector('#memory-board').innerHTML = html;
+  document.getElementById('memory-board').innerHTML = html;
 
   // Bind the click event of each element to a function
   document.querySelectorAll('.card').forEach((card) => {
-    card.addEventListener('click', () => {
-      // TODO: write some code here
+    card.addEventListener('click', (event) => {
+      const clickedCard = event.currentTarget;
+      clickedCard.classList.add('turned');
+      
+
       console.log(`Card clicked: ${card}`);
     });
   });
