@@ -29,24 +29,49 @@ const memoryGame = new MemoryGame(cards);
 
 window.addEventListener('load', (event) => {
   let html = '';
+  memoryGame.shuffleCards();
   memoryGame.cards.forEach((pic) => {
-    html += `<div class="card" data-card-name="${pic.name}">`;
-    html += `<div class="back" name="${pic.img}"></div>`;
-    html += `<div class="front" style="background: url(img/${pic.img}) no-repeat"></div>`;
-    html += `</div>`;
+    html += `
+      <div class="card" data-card-name="${pic.name}">
+        <div class="back" name="${pic.img}"></div>
+        <div class="front" style="background: url(img/${pic.img}) no-repeat"></div>
+      </div>
+    `;
   });
 
   // Add all the divs to the HTML
-  document.getElementById('memory-board').innerHTML = html;
+  document.querySelector('#memory-board').innerHTML = html;
 
   // Bind the click event of each element to a function
   document.querySelectorAll('.card').forEach((card) => {
-    card.addEventListener('click', (event) => {
-      const clickedCard = event.currentTarget;
-      clickedCard.classList.add('turned');
-      
+    card.addEventListener('click', () => {
+      card.classList.toggle('turned');
+      memoryGame.pickedCards.push(card);
 
-      console.log(`Card clicked: ${card}`);
+      if (memoryGame.pickedCards.length === 2) {
+        const card1 = {
+          name: memoryGame.pickedCards[0].getAttribute('data-card-name')
+        };
+        const card2 = {
+          name: memoryGame.pickedCards[1].getAttribute('data-card-name')
+        };
+        const cardList = [...memoryGame.pickedCards];
+
+        if (!memoryGame.checkIfPair(card1, card2)) {
+          setTimeout(() => {
+            cardList[0].classList.toggle('turned');
+            cardList[1].classList.toggle('turned');
+          }, 1000);
+        }
+
+        document.getElementById('pairs-clicked').innerText =
+          memoryGame.pairsClicked;
+        document.getElementById('pairs-guessed').innerText =
+          memoryGame.pairsGuessed;
+        if (memoryGame.checkIfFinished()) {
+          alert('You won!!!');
+        }
+      }
     });
   });
 });

@@ -1,51 +1,35 @@
 class MemoryGame {
   constructor(cards) {
     this.cards = cards;
+    // add the rest of the class properties here
     this.pickedCards = [];
     this.pairsClicked = 0;
     this.pairsGuessed = 0;
-     }
-
-
-  shuffleCards(cards) {
-    let currentIndex = this.cards.length,
-      randomIndex;
-    while (0 !== currentIndex) {
-      randomIndex = Math.floor(Math.random() * currentIndex);
-      currentIndex--;
-
-      [this.cards[currentIndex], this.cards[randomIndex]] = [
-        this.cards[randomIndex],
-        this.cards[currentIndex]
-      ];
-    }
-
-    return cards;
   }
 
+  shuffleCards() {
+    for (let i = this.cards.length - 1; i >= 1; i--) {
+      const j = Math.floor(Math.random() * i);
+      const aux = this.cards[i];
+      this.cards[i] = this.cards[j];
+      this.cards[j] = aux;
+    }
+  }
 
   checkIfPair(card1, card2) {
-    this.pairsClicked = this.pairsClicked + 1;
-     if(card1 === card2) {
-      this.pairsGuessed += 1
-      this.pairsClicked += 1
-      return true
-    }
-    else {
-      this.pairsClicked += 1
-      return false
-    }
-  }
-
-  isFinished() {
-    let numpairstoWin = this.cards.length / 2;
-
-    if (numpairstoWin > this.pairsGuessed) {
-      return false;
-    } else if (numpairstoWin === this.pairsGuessed) {
+    this.pickedCards = [];
+    this.pairsClicked++;
+    if (card1.name === card2.name) {
+      this.pairsGuessed++;
       return true;
     }
+    return false;
+  }
+
+  checkIfFinished() {
+    return this.pairsGuessed === this.cards.length / 2;
   }
 }
+
 // The following is required for automated testing. Please, ignore it.
 if (typeof module !== 'undefined') module.exports = MemoryGame;
